@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthy Food Guide</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        p.subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+        .search-box {
+            width: 100%;
+            padding: 12px 20px;
+            margin-bottom: 30px;
+            box-sizing: border-box;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        .search-box:focus {
+            border-color: #2ecc71;
+            outline: none;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 600px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+        .column {
+            background: #fafafa;
+            padding: 20px;
+            border-radius: 8px;
+            border-top: 5px solid #ccc;
+        }
+        .column.eat { border-top-color: #2ecc71; }
+        .column.avoid { border-top-color: #e74c3c; }
+        h2 {
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .eat h2 { color: #27ae60; }
+        .avoid h2 { color: #c0392b; }
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        li {
+            padding: 12px;
+            background: white;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
+        }
+        .food-name { font-weight: bold; }
+        .food-reason {
+            font-size: 13px;
+            color: #7f8c8d;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Smart Food Guide</h1>
+    <p class="subtitle">Search for foods to see what to enjoy and what to limit.</p>
+    
+    <input type="text" id="searchInput" class="search-box" onkeyup="filterFoods()" placeholder="Search for a food (e.g., Spinach, Soda)...">
+
+    <div class="grid">
+        <!-- EAT COLUMN -->
+        <div class="column eat">
+            <h2>🟢 Foods to Eat</h2>
+            <ul id="eatList">
+                <li class="food-item"><span class="food-name">Spinach</span><span class="food-reason">Packed with iron, vitamins, and antioxidants.</span></li>
+                <li class="food-item"><span class="food-name">Blueberries</span><span class="food-reason">High in fiber and great for brain health.</span></li>
+                <li class="food-item"><span class="food-name">Salmon</span><span class="food-reason">Excellent source of Omega-3 fatty acids.</span></li>
+                <li class="food-item"><span class="food-name">Almonds</span><span class="food-reason">Healthy fats that keep you full longer.</span></li>
+                <li class="food-item"><span class="food-name">Oats</span><span class="food-reason">Great for digestion and heart health.</span></li>
+            </ul>
+        </div>
+
+        <!-- AVOID COLUMN -->
+        <div class="column avoid">
+            <h2>🔴 Foods to Avoid</h2>
+            <ul id="avoidList">
+                <li class="food-item"><span class="food-name">Soda & Sugary Drinks</span><span class="food-reason">High in empty calories and spikes blood sugar.</span></li>
+                <li class="food-item"><span class="food-name">Potato Chips</span><span class="food-reason">Deep-fried, high in sodium and unhealthy fats.</span></li>
+                <li class="food-item"><span class="food-name">White Bread</span><span class="food-reason">Highly processed, lacks fiber and nutrients.</span></li>
+                <li class="food-item"><span class="food-name">Frozen Pizzas</span><span class="food-reason">Often loaded with preservatives and sodium.</span></li>
+                <li class="food-item"><span class="food-name">Margarine</span><span class="food-reason">Can contain trans fats which harm heart health.</span></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+function filterFoods() {
+    let input = document.getElementById('searchInput').value.toLowerCase();
+    let foodItems = document.getElementsByClassName('food-item');
+
+    for (let i = 0; i < foodItems.length; i++) {
+        let foodName = foodItems[i].getElementsByClassName('food-name')[0].innerText.toLowerCase();
+        if (foodName.includes(input)) {
+            foodItems[i].style.display = "";
+        } else {
+            foodItems[i].style.display = "none";
+        }
+    }
+}
+</script>
+
+</body>
+</html>
