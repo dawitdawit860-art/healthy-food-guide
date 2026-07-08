@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Type Food Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 900px;
+            width: 100%;
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #999;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .blood-type-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .blood-type-btn {
+            padding: 12px 20px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .blood-type-btn:hover {
+            border-color: #667eea;
+        }
+
+        .blood-type-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .search-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .search-btn {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .result-card {
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-card.beneficial {
+            background: #d4edda;
+            border-left: 5px solid #28a745;
+        }
+
+        .result-card.avoid {
+            background: #f8d7da;
+            border-left: 5px solid #dc3545;
+        }
+
+        .result-card.neutral {
+            background: #e2e3e5;
+            border-left: 5px solid #6c757d;
+        }
+
+        .result-card h3 {
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .result-card.beneficial h3 {
+            color: #155724;
+        }
+
+        .result-card.avoid h3 {
+            color: #721c24;
+        }
+
+        .result-card.neutral h3 {
+            color: #383d41;
+        }
+
+        .result-card p {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .result-card.beneficial p {
+            color: #155724;
+        }
+
+        .result-card.avoid p {
+            color: #721c24;
+        }
+
+        .result-card.neutral p {
+            color: #383d41;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .blood-type-info {
+            background: #f0f7ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .blood-type-info p {
+            font-size: 14px;
+            color: #333;
+            margin: 5px 0;
+        }
+
+        .food-list {
+            margin-top: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .food-item {
+            padding: 12px;
+            background: white;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+        }
+
+        .food-item.beneficial {
+            border-left-color: #28a745;
+        }
+
+        .food-item.avoid {
+            border-left-color: #dc3545;
+        }
+
+        @media (max-width: 768px) {
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .blood-type-selector {
+                flex-direction: column;
+            }
+
+            .blood-type-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🩸 Blood Type Food Guide</h1>
+    <p class="subtitle">Find foods that match your blood type for optimal health</p>
+
+    <div class="blood-type-selector">
+        <button class="blood-type-btn" onclick="selectBloodType('O')">O</button>
+        <button class="blood-type-btn" onclick="selectBloodType('A')">A</button>
+        <button class="blood-type-btn" onclick="selectBloodType('B')">B</button>
+        <button class="blood-type-btn" onclick="selectBloodType('AB')">AB</button>
+    </div>
+
+    <div id="bloodTypeInfo" class="blood-type-info" style="display: none;"></div>
+
+    <div class="search-container">
+        <input 
+            type="text" 
+            id="foodSearch" 
+            placeholder="Search for a food..."
+            autocomplete="off"
+        >
+        <button class="search-btn" onclick="searchFood()">Search</button>
+    </div>
+
+    <div id="emptyState" class="empty-state">
+        <div class="empty-state-icon">🔍</div>
+        <p>Select your blood type and search for a food to get personalized recommendations!</p>
+    </div>
+
+    <div id="resultsContainer" class="results-grid" style="display: none;"></div>
+
+    <div id="foodListContainer" class="food-list" style="display: none;"></div>
+</div>
+
+<script>
+    const foodDatabase = {
+        O: {
+            beneficial: [
+                "Beef", "Lamb", "Venison", "Salmon", "Mackerel", "Cod", "Sardines",
+                "Broccoli", "Spinach", "Kale", "Lettuce", "Onions", "Garlic", "Mushrooms",
+                "Olives", "Nuts", "Seeds", "Olive oil", "Plums", "Figs", "Prunes",
+                "Apples", "Pears", "Watermelon", "Ginger", "Red peppers", "Green beans"
+            ],
+            avoid: [
+                "Pork", "Ham", "Bacon", "Caviar", "Corn", "Wheat", "Oats", "Barley",
+                "Beans", "Lentils", "Peanuts", "Cashews", "Milk", "Cheese", "Ice cream",
+                "Yogurt", "Cabbage", "Potatoes", "Eggplant", "Tomatoes", "Avocados",
+                "Coconut", "Corn oil", "Peanut oil", "Pasta", "Bread", "Muffins"
+            ],
+            neutral: [
+                "Chicken", "Turkey", "Duck", "Tuna", "Halibut", "Trout", "Shrimp",
+                "Carrots", "Celery", "Cucumber", "Asparagus", "Beets", "Radishes",
+                "Rice", "Honey", "Maple syrup", "Oranges", "Grapes", "Bananas",
+                "Strawberries", "Blueberries", "Tea", "Coffee", "Water", "Wine"
+            ]
+        },
+        A: {
+            beneficial: [
+                "Turkey", "Chicken", "Fish", "Salmon", "Mackerel", "Sardines", "Cod",
+                "Tofu", "Tempeh", "Lentils", "Beans", "Peas", "Soy products",
+                "Broccoli", "Kale", "Spinach", "Carrots", "Beets", "Garlic", "Onions",
+                "Olive oil", "Nuts", "Seeds", "Grains", "Brown rice", "Oats",
+                "Apples", "Berries", "Cherries", "Lemons", "Limes", "Ginger"
+            ],
+            avoid: [
+                "Beef", "Pork", "Lamb", "Venison", "Caviar", "Shrimp", "Cheese",
+                "Milk", "Yogurt", "Cream", "Butter", "Wheat", "White bread",
+                "Corn", "Potatoes", "Tomatoes", "Peppers", "Cabbage", "Eggplant",
+                "Mushrooms", "Olives", "Coconut", "Bananas", "Oranges", "Mangoes"
+            ],
+            neutral: [
+                "Tuna", "Halibut", "Trout", "Herring", "Rice", "Rye", "Millet",
+                "Asparagus", "Green beans", "Lettuce", "Cucumber", "Celery",
+                "Honey", "Maple syrup", "Pears", "Peaches", "Grapes", "Pineapple",
+                "Tea", "Coffee", "Wine", "Beer"
+            ]
+        },
+        B: {
+            beneficial: [
+                "Lamb", "Mutton", "Venison", "Rabbit", "Salmon", "Mackerel", "Cod",
+                "Halibut", "Flounder", "Trout", "Milk", "Yogurt", "Cheese", "Ricotta",
+                "Eggs", "Rice", "Oats", "Millet", "Rye", "Spelt", "Broccoli",
+                "Cabbage", "Kale", "Spinach", "Carrots", "Beets", "Mushrooms",
+                "Peppers", "Olives", "Oils", "Nuts", "Seeds", "Apples", "Berries"
+            ],
+            avoid: [
+                "Chicken", "Pork", "Beef", "Corn", "Wheat", "Buckwheat", "Peanuts",
+                "Sesame seeds", "Sunflower seeds", "Lentils", "Beans", "Tomatoes",
+                "Avocados", "Coconut", "Corn oil", "Peanut oil", "Sesame oil",
+                "Buckwheat", "Rye", "Tapioca", "Pumpkin", "Artichoke", "Radishes"
+            ],
+            neutral: [
+                "Turkey", "Duck", "Tuna", "Sardines", "Shrimp", "Lobster", "Herring",
+                "Brown rice", "Pasta", "Bread", "Crackers", "Asparagus", "Celery",
+                "Cucumber", "Green beans", "Lettuce", "Honey", "Maple syrup",
+                "Bananas", "Cherries", "Grapes", "Lemons", "Pears", "Pineapple"
+            ]
+        },
+        AB: {
+            beneficial: [
+                "Lamb", "Mutton", "Rabbit", "Salmon", "Mackerel", "Cod", "Tuna",
+                "Sardines", "Milk", "Yogurt", "Cheese", "Kefir", "Tofu", "Tempeh",
+                "Beans", "Lentils", "Peas", "Soy products", "Rice", "Oats", "Rye",
+                "Broccoli", "Cauliflower", "Kale", "Spinach", "Carrots", "Beets",
+                "Garlic", "Onions", "Mushrooms", "Olives", "Apples", "Berries"
+            ],
+            avoid: [
+                "Beef", "Pork", "Venison", "Chicken", "Corn", "Buckwheat", "Peanuts",
+                "Sesame seeds", "Sunflower seeds", "Tomatoes", "Peppers", "Avocados",
+                "Corn oil", "Peanut oil", "Sesame oil", "Radishes", "Artichokes",
+                "Bananas", "Coconut", "Guava", "Mangoes", "Oranges", "Rhubarb"
+            ],
+            neutral: [
+                "Turkey", "Duck", "Tuna", "Halibut", "Trout", "Shrimp", "Lobster",
+                "Eggs", "Brown rice", "Bread", "Pasta", "Crackers", "Asparagus",
+                "Celery", "Cucumber", "Green beans", "Lettuce", "Honey", "Maple syrup",
+                "Cherries", "Grapes", "Lemons", "Limes", "Pears", "Pineapple"
+            ]
+        }
+    };
+
+    const bloodTypeDescriptions = {
+        O: "Blood Type O: The \"Hunter\" - Thrives on high-protein, meat-based diets with plenty of vegetables and fruits.",
+        A: "Blood Type A: The \"Cultivator\" - Does well with plant-based foods, fish, and grains.",
+        B: "Blood Type B: The \"Nomad\" - Balanced diet with meats, dairy, grains, and vegetables.",
+        AB: "Blood Type AB: The \"Enigma\" - Combination of A and B characteristics, thrives on a balanced diet."
+    };
+
+    let selectedBloodType = null;
+
+    function selectBloodType(type) {
+        selectedBloodType = type;
+        
+        // Update button states
+        document.querySelectorAll('.blood-type-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        event.target.classList.add('active');
+
+        // Show blood type info
+        document.getElementById('bloodTypeInfo').innerHTML = bloodTypeDescriptions[type];
+        document.getElementById('bloodTypeInfo').style.display = 'block';
+        
+        // Clear search
+        document.getElementById('foodSearch').value = '';
+        document.getElementById('resultsContainer').style.display = 'none';
+        document.getElementById('foodListContainer').style.display = 'none';
+        document.getElementById('emptyState').style.display = 'block';
+    }
+
+    function searchFood() {
+        if (!selectedBloodType) {
+            alert('Please select your blood type first!');
+            return;
+        }
+
+        const searchTerm = document.getElementById('foodSearch').value.trim().toLowerCase();
+        
+        if (searchTerm === '') {
+            alert('Please enter a food name!');
+            return;
+        }
+
+        const beneficial = foodDatabase[selectedBloodType].beneficial;
+        const avoid = foodDatabase[selectedBloodType].avoid;
+        const neutral = foodDatabase[selectedBloodType].neutral;
+
+        let beneficialMatch = beneficial.find(f => f.toLowerCase().includes(searchTerm));
+        let avoidMatch = avoid.find(f => f.toLowerCase().includes(searchTerm));
+        let neutralMatch = neutral.find(f => f.toLowerCase().includes(searchTerm));
+
+        document.getElementById('emptyState').style.display = 'none';
+        document.getElementById('foodListContainer').style.display = 'none';
+        document.getElementById('resultsContainer').style.display = 'grid';
+        document.getElementById('resultsContainer').innerHTML = '';
+
+        if (beneficialMatch) {
+            addResultCard('beneficial', beneficialMatch, 'Excellent Choice! ✅', 'This food is beneficial for your blood type and supports optimal health.');
+        }
+
+        if (avoidMatch) {
+            addResultCard('avoid', avoidMatch, 'Avoid This! ❌', 'This food may cause digestive issues and inflammation for your blood type.');
+        }
+
+        if (neutralMatch) {
+            addResultCard('neutral', neutralMatch, 'Neutral - Okay ⚠️', 'This food is neutral for your blood type. It\'s safe to eat in moderation.');
+        }
+
+        if (!beneficialMatch && !avoidMatch && !neutralMatch) {
+            document.getElementById('resultsContainer').style.display = 'none';
+            document.getElementById('emptyState').innerHTML = `
+                <div class="empty-state-icon">🔍</div>
+                <p>Food not found in database. Try searching for another food!</p>
+            `;
+            document.getElementById('emptyState').style.display = 'block';
+        }
+    }
+
+    function addResultCard(type, foodName, title, description) {
+        const card = document.createElement('div');
+        card.className = `result-card ${type}`;
+        card.innerHTML = `
+            <h3>${title}</h3>
+            <p><strong>${foodName}</strong></p>
+            <p>${description}</p>
+        `;
+        document.getElementById('resultsContainer').appendChild(card);
+    }
+
+    // Allow Enter key to search
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('foodSearch').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchFood();
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
