@@ -158,6 +158,7 @@
         .result-card p {
             font-size: 14px;
             line-height: 1.6;
+            margin-bottom: 8px;
         }
 
         .result-card.beneficial p {
@@ -170,6 +171,11 @@
 
         .result-card.neutral p {
             color: #383d41;
+        }
+
+        .reason-label {
+            font-weight: bold;
+            margin-top: 10px;
         }
 
         .empty-state {
@@ -273,85 +279,348 @@
     const foodDatabase = {
         O: {
             beneficial: [
-                "Beef", "Lamb", "Venison", "Salmon", "Mackerel", "Cod", "Sardines",
-                "Broccoli", "Spinach", "Kale", "Lettuce", "Onions", "Garlic", "Mushrooms",
-                "Olives", "Nuts", "Seeds", "Olive oil", "Plums", "Figs", "Prunes",
-                "Apples", "Pears", "Watermelon", "Ginger", "Red peppers", "Green beans"
+                { name: "Beef", why: "High in iron, B vitamins, and protein for muscle building and energy", whyNot: "" },
+                { name: "Lamb", why: "Excellent source of omega-3 fatty acids and selenium for heart health", whyNot: "" },
+                { name: "Venison", why: "Lean protein rich in zinc and iron without excess fat", whyNot: "" },
+                { name: "Salmon", why: "Rich in omega-3 fatty acids for brain and heart health", whyNot: "" },
+                { name: "Mackerel", why: "Contains omega-3s and vitamin D for immunity and bone strength", whyNot: "" },
+                { name: "Cod", why: "Low-fat protein source with iodine for thyroid health", whyNot: "" },
+                { name: "Sardines", why: "High in calcium, omega-3s, and vitamin D", whyNot: "" },
+                { name: "Trout", why: "Contains selenium and omega-3s for antioxidant support", whyNot: "" },
+                { name: "Halibut", why: "Lean fish with magnesium for muscle and nerve function", whyNot: "" },
+                { name: "Broccoli", why: "High in vitamin C, K, and cancer-fighting compounds", whyNot: "" },
+                { name: "Spinach", why: "Packed with iron, folate, and antioxidants for energy", whyNot: "" },
+                { name: "Kale", why: "Superfood with vitamins A, C, K and detoxifying properties", whyNot: "" },
+                { name: "Lettuce", why: "Light vegetable with minerals and low calories", whyNot: "" },
+                { name: "Onions", why: "Contains quercetin for anti-inflammatory and antioxidant effects", whyNot: "" },
+                { name: "Garlic", why: "Powerful immune booster with sulfur compounds", whyNot: "" },
+                { name: "Mushrooms", why: "Rich in beta-glucans for immune system support", whyNot: "" },
+                { name: "Red peppers", why: "Highest vitamin C content among peppers for immunity", whyNot: "" },
+                { name: "Green beans", why: "High in vitamin K and beneficial compounds", whyNot: "" },
+                { name: "Asparagus", why: "Contains folate and glutathione for detoxification", whyNot: "" },
+                { name: "Carrots", why: "Rich in beta-carotene for eye and skin health", whyNot: "" },
+                { name: "Olives", why: "Contains polyphenols and healthy monounsaturated fats", whyNot: "" },
+                { name: "Almonds", why: "High in vitamin E and magnesium for heart health", whyNot: "" },
+                { name: "Walnuts", why: "Excellent source of omega-3 ALA for brain health", whyNot: "" },
+                { name: "Olive oil", why: "Pure source of monounsaturated fats and polyphenols", whyNot: "" },
+                { name: "Plums", why: "Contain anthocyanins for antioxidant protection", whyNot: "" },
+                { name: "Figs", why: "High in fiber and minerals like potassium and calcium", whyNot: "" },
+                { name: "Prunes", why: "Excellent for digestive health and bone strength", whyNot: "" },
+                { name: "Apples", why: "Contains pectin fiber for gut health and blood sugar control", whyNot: "" },
+                { name: "Pears", why: "High in soluble fiber for digestion and satiety", whyNot: "" },
+                { name: "Watermelon", why: "Hydrating fruit with lycopene for heart health", whyNot: "" },
+                { name: "Ginger", why: "Anti-inflammatory spice that aids digestion and reduces nausea", whyNot: "" }
             ],
             avoid: [
-                "Pork", "Ham", "Bacon", "Caviar", "Corn", "Wheat", "Oats", "Barley",
-                "Beans", "Lentils", "Peanuts", "Cashews", "Milk", "Cheese", "Ice cream",
-                "Yogurt", "Cabbage", "Potatoes", "Eggplant", "Tomatoes", "Avocados",
-                "Coconut", "Corn oil", "Peanut oil", "Pasta", "Bread", "Muffins"
+                { name: "Pork", why: "", whyNot: "Contains lectins that can cause digestive inflammation in Type O" },
+                { name: "Ham", why: "", whyNot: "Processed meat with high sodium and harmful preservatives" },
+                { name: "Bacon", why: "", whyNot: "High in saturated fat and nitrates which damage blood vessels" },
+                { name: "Corn", why: "", whyNot: "Contains lectins that interfere with Type O digestion" },
+                { name: "Wheat", why: "", whyNot: "Gluten can trigger inflammation and digestive issues" },
+                { name: "Oats", why: "", whyNot: "Contains avenin which may cause inflammatory response" },
+                { name: "Barley", why: "", whyNot: "Contains gluten and lectins problematic for Type O" },
+                { name: "Beans", why: "", whyNot: "High in lectins that can cause digestive distress" },
+                { name: "Lentils", why: "", whyNot: "Lectins in lentils interfere with nutrient absorption" },
+                { name: "Peanuts", why: "", whyNot: "High in lectins and can cause allergic reactions" },
+                { name: "Cashews", why: "", whyNot: "High in omega-6 which promotes inflammation" },
+                { name: "Milk", why: "", whyNot: "Casein can cause inflammatory response in Type O" },
+                { name: "Cheese", why: "", whyNot: "High in saturated fat and difficult to digest" },
+                { name: "Ice cream", why: "", whyNot: "Combines milk lactose with refined sugar" },
+                { name: "Yogurt", why: "", whyNot: "Dairy product that can increase mucus production" },
+                { name: "Cabbage", why: "", whyNot: "Can suppress thyroid function if eaten raw in excess" },
+                { name: "Potatoes", why: "", whyNot: "High glycemic load can spike blood sugar" },
+                { name: "Eggplant", why: "", whyNot: "Alkaloid compounds can cause inflammation" },
+                { name: "Tomatoes", why: "", whyNot: "Lectins and acidity can trigger digestive issues" },
+                { name: "Avocados", why: "", whyNot: "High fat content can slow digestion" },
+                { name: "Coconut", why: "", whyNot: "Too high in saturated fat for Type O" },
+                { name: "Corn oil", why: "", whyNot: "Highly inflammatory omega-6 oil" },
+                { name: "Peanut oil", why: "", whyNot: "Contains lectins and inflammatory omega-6" },
+                { name: "Pasta", why: "", whyNot: "Made from wheat which contains gluten and lectins" },
+                { name: "Bread", why: "", whyNot: "Refined grains cause blood sugar spikes" },
+                { name: "Muffins", why: "", whyNot: "High sugar and refined flour content" },
+                { name: "White rice", why: "", whyNot: "Refined grain without nutritional value" },
+                { name: "Caviar", why: "", whyNot: "High in purines which can cause gout" }
             ],
             neutral: [
-                "Chicken", "Turkey", "Duck", "Tuna", "Halibut", "Trout", "Shrimp",
-                "Carrots", "Celery", "Cucumber", "Asparagus", "Beets", "Radishes",
-                "Rice", "Honey", "Maple syrup", "Oranges", "Grapes", "Bananas",
-                "Strawberries", "Blueberries", "Tea", "Coffee", "Water", "Wine"
+                { name: "Chicken", why: "Good lean protein source", whyNot: "" },
+                { name: "Turkey", why: "Lean protein with B vitamins", whyNot: "" },
+                { name: "Duck", why: "Contains selenium and B vitamins", whyNot: "" },
+                { name: "Tuna", why: "Protein source with omega-3s", whyNot: "" },
+                { name: "Shrimp", why: "Low calorie protein with minerals", whyNot: "" },
+                { name: "Herring", why: "Good source of omega-3 fatty acids", whyNot: "" },
+                { name: "Carrots", why: "Rich in beta-carotene", whyNot: "" },
+                { name: "Celery", why: "Low calorie vegetable with minerals", whyNot: "" },
+                { name: "Cucumber", why: "Hydrating vegetable with antioxidants", whyNot: "" },
+                { name: "Rice", why: "Gluten-free carbohydrate source", whyNot: "" },
+                { name: "Honey", why: "Natural sweetener with trace nutrients", whyNot: "" },
+                { name: "Maple syrup", why: "Contains minerals and antioxidants", whyNot: "" },
+                { name: "Oranges", why: "Vitamin C source for immunity", whyNot: "" },
+                { name: "Grapes", why: "Contain resveratrol antioxidant", whyNot: "" },
+                { name: "Bananas", why: "Good source of potassium", whyNot: "" },
+                { name: "Strawberries", why: "High in vitamin C and antioxidants", whyNot: "" },
+                { name: "Blueberries", why: "Powerful antioxidants for brain health", whyNot: "" },
+                { name: "Tea", why: "Contains beneficial polyphenols", whyNot: "" },
+                { name: "Coffee", why: "Can boost metabolism and alertness", whyNot: "" },
+                { name: "Water", why: "Essential for all bodily functions", whyNot: "" },
+                { name: "Wine", why: "Contains antioxidants in moderation", whyNot: "" }
             ]
         },
         A: {
             beneficial: [
-                "Turkey", "Chicken", "Fish", "Salmon", "Mackerel", "Sardines", "Cod",
-                "Tofu", "Tempeh", "Lentils", "Beans", "Peas", "Soy products",
-                "Broccoli", "Kale", "Spinach", "Carrots", "Beets", "Garlic", "Onions",
-                "Olive oil", "Nuts", "Seeds", "Grains", "Brown rice", "Oats",
-                "Apples", "Berries", "Cherries", "Lemons", "Limes", "Ginger"
+                { name: "Turkey", why: "Lean protein that's easier to digest than red meat", whyNot: "" },
+                { name: "Chicken", why: "Light protein source with B vitamins", whyNot: "" },
+                { name: "Salmon", why: "Rich in omega-3s for heart and brain health", whyNot: "" },
+                { name: "Mackerel", why: "Excellent source of omega-3 and vitamin D", whyNot: "" },
+                { name: "Sardines", why: "High in calcium and omega-3s", whyNot: "" },
+                { name: "Cod", why: "Lean fish with iodine for thyroid", whyNot: "" },
+                { name: "Tofu", why: "Complete plant protein with all amino acids", whyNot: "" },
+                { name: "Tempeh", why: "Fermented soy with improved digestibility", whyNot: "" },
+                { name: "Lentils", why: "High in protein, fiber, and iron for energy", whyNot: "" },
+                { name: "Beans", why: "Excellent plant-based protein and fiber source", whyNot: "" },
+                { name: "Peas", why: "Protein-rich with minerals and antioxidants", whyNot: "" },
+                { name: "Soy products", why: "Complete protein for plant-based diets", whyNot: "" },
+                { name: "Broccoli", why: "Cruciferous vegetable with cancer-fighting compounds", whyNot: "" },
+                { name: "Kale", why: "Nutrient-dense leafy green with vitamins A, C, K", whyNot: "" },
+                { name: "Spinach", why: "High in iron and folate for blood health", whyNot: "" },
+                { name: "Carrots", why: "Rich in beta-carotene for eye health", whyNot: "" },
+                { name: "Beets", why: "Contain nitrates for blood pressure support", whyNot: "" },
+                { name: "Garlic", why: "Powerful immune booster with sulfur compounds", whyNot: "" },
+                { name: "Onions", why: "Anti-inflammatory with quercetin antioxidant", whyNot: "" },
+                { name: "Olive oil", why: "Pure monounsaturated fat for heart health", whyNot: "" },
+                { name: "Almonds", why: "Rich in vitamin E and healthy fats", whyNot: "" },
+                { name: "Seeds", why: "High in minerals, healthy fats, and fiber", whyNot: "" },
+                { name: "Brown rice", why: "Whole grain with B vitamins and fiber", whyNot: "" },
+                { name: "Oats", why: "Soluble fiber for cholesterol management", whyNot: "" },
+                { name: "Grains", why: "Provides complex carbohydrates for sustained energy", whyNot: "" },
+                { name: "Apples", why: "Contains pectin fiber for digestive health", whyNot: "" },
+                { name: "Berries", why: "Antioxidant-rich for immune support", whyNot: "" },
+                { name: "Cherries", why: "Contains anthocyanins for anti-inflammatory effects", whyNot: "" },
+                { name: "Lemons", why: "Alkalizing fruit that aids digestion", whyNot: "" },
+                { name: "Limes", why: "Vitamin C rich for immune support", whyNot: "" },
+                { name: "Ginger", why: "Anti-inflammatory spice for digestion", whyNot: "" }
             ],
             avoid: [
-                "Beef", "Pork", "Lamb", "Venison", "Caviar", "Shrimp", "Cheese",
-                "Milk", "Yogurt", "Cream", "Butter", "Wheat", "White bread",
-                "Corn", "Potatoes", "Tomatoes", "Peppers", "Cabbage", "Eggplant",
-                "Mushrooms", "Olives", "Coconut", "Bananas", "Oranges", "Mangoes"
+                { name: "Beef", why: "", whyNot: "Red meat is harder to digest and more inflammatory for Type A" },
+                { name: "Pork", why: "", whyNot: "Contains lectins that cause digestive inflammation" },
+                { name: "Lamb", why: "", whyNot: "High in saturated fat and difficult to digest" },
+                { name: "Venison", why: "", whyNot: "Game meat too heavy for Type A digestion" },
+                { name: "Caviar", why: "", whyNot: "Too high in purines and cholesterol" },
+                { name: "Shrimp", why: "", whyNot: "Shellfish can trigger digestive issues" },
+                { name: "Cheese", why: "", whyNot: "High saturated fat and mucus-producing" },
+                { name: "Milk", why: "", whyNot: "Lactose intolerance common in Type A" },
+                { name: "Yogurt", why: "", whyNot: "Dairy can increase mucus production" },
+                { name: "Cream", why: "", whyNot: "High fat content slows digestion" },
+                { name: "Butter", why: "", whyNot: "Saturated fat that increases inflammation" },
+                { name: "Wheat", why: "", whyNot: "Can cause inflammation and digestive distress" },
+                { name: "White bread", why: "", whyNot: "Refined carbs spike blood sugar" },
+                { name: "Corn", why: "", whyNot: "Lectins can cause inflammatory response" },
+                { name: "Potatoes", why: "", whyNot: "High glycemic index causes blood sugar spikes" },
+                { name: "Tomatoes", why: "", whyNot: "Lectins and acidity trigger digestion problems" },
+                { name: "Peppers", why: "", whyNot: "Can irritate sensitive Type A digestive system" },
+                { name: "Cabbage", why: "", whyNot: "Can suppress thyroid function" },
+                { name: "Eggplant", why: "", whyNot: "Alkaloid compounds cause inflammation" },
+                { name: "Mushrooms", why: "", whyNot: "May be too heavy for Type A digestion" },
+                { name: "Olives", why: "", whyNot: "Can be hard to digest for sensitive stomachs" },
+                { name: "Coconut", why: "", whyNot: "Saturated fat too heavy for Type A" },
+                { name: "Corn oil", why: "", whyNot: "Inflammatory omega-6 oil" },
+                { name: "Peanut oil", why: "", whyNot: "Contains lectins and inflammatory omega-6" },
+                { name: "Banana", why: "", whyNot: "Too mucus-producing for some Type A individuals" },
+                { name: "Orange", why: "", whyNot: "Too acidic and may cause inflammation" },
+                { name: "Mango", why: "", whyNot: "Too heavy and high in sugar" }
             ],
             neutral: [
-                "Tuna", "Halibut", "Trout", "Herring", "Rice", "Rye", "Millet",
-                "Asparagus", "Green beans", "Lettuce", "Cucumber", "Celery",
-                "Honey", "Maple syrup", "Pears", "Peaches", "Grapes", "Pineapple",
-                "Tea", "Coffee", "Wine", "Beer"
+                { name: "Tuna", why: "Good lean fish protein", whyNot: "" },
+                { name: "Halibut", why: "Lean fish with magnesium", whyNot: "" },
+                { name: "Trout", why: "Contains omega-3s and selenium", whyNot: "" },
+                { name: "Herring", why: "Good source of omega-3s", whyNot: "" },
+                { name: "Rice", why: "Gluten-free grain option", whyNot: "" },
+                { name: "Rye", why: "Whole grain with good nutrients", whyNot: "" },
+                { name: "Asparagus", why: "Nutrient-rich green vegetable", whyNot: "" },
+                { name: "Green beans", why: "Good source of vitamins and minerals", whyNot: "" },
+                { name: "Lettuce", why: "Light vegetable with antioxidants", whyNot: "" },
+                { name: "Cucumber", why: "Hydrating and low-calorie", whyNot: "" },
+                { name: "Celery", why: "Contains beneficial minerals", whyNot: "" },
+                { name: "Honey", why: "Natural sweetener with nutrients", whyNot: "" },
+                { name: "Maple syrup", why: "Contains minerals and antioxidants", whyNot: "" },
+                { name: "Pear", why: "Good source of fiber and vitamin C", whyNot: "" },
+                { name: "Peach", why: "Antioxidant fruit with vitamins", whyNot: "" },
+                { name: "Grape", why: "Contains resveratrol antioxidant", whyNot: "" },
+                { name: "Pineapple", why: "Contains bromelain enzyme for digestion", whyNot: "" },
+                { name: "Tea", why: "Beneficial polyphenols and antioxidants", whyNot: "" },
+                { name: "Coffee", why: "Can boost metabolism in moderation", whyNot: "" },
+                { name: "Wine", why: "Antioxidants in moderation", whyNot: "" },
+                { name: "Beer", why: "Can be enjoyed in moderation", whyNot: "" }
             ]
         },
         B: {
             beneficial: [
-                "Lamb", "Mutton", "Venison", "Rabbit", "Salmon", "Mackerel", "Cod",
-                "Halibut", "Flounder", "Trout", "Milk", "Yogurt", "Cheese", "Ricotta",
-                "Eggs", "Rice", "Oats", "Millet", "Rye", "Spelt", "Broccoli",
-                "Cabbage", "Kale", "Spinach", "Carrots", "Beets", "Mushrooms",
-                "Peppers", "Olives", "Oils", "Nuts", "Seeds", "Apples", "Berries"
+                { name: "Lamb", why: "Excellent protein with beneficial nutrients", whyNot: "" },
+                { name: "Mutton", why: "Rich in iron and B vitamins", whyNot: "" },
+                { name: "Venison", why: "Lean game meat high in nutrients", whyNot: "" },
+                { name: "Rabbit", why: "Light protein source with minerals", whyNot: "" },
+                { name: "Salmon", why: "Rich in omega-3s for heart and brain health", whyNot: "" },
+                { name: "Mackerel", why: "Excellent source of omega-3 and vitamin D", whyNot: "" },
+                { name: "Cod", why: "Lean fish with iodine for thyroid", whyNot: "" },
+                { name: "Halibut", why: "High in magnesium and selenium", whyNot: "" },
+                { name: "Flounder", why: "Lean white fish with quality protein", whyNot: "" },
+                { name: "Trout", why: "Contains omega-3s and antioxidants", whyNot: "" },
+                { name: "Milk", why: "Calcium source for bone strength", whyNot: "" },
+                { name: "Yogurt", why: "Probiotics for gut health", whyNot: "" },
+                { name: "Cheese", why: "Protein and calcium for bones", whyNot: "" },
+                { name: "Ricotta", why: "Whey protein good for muscle building", whyNot: "" },
+                { name: "Eggs", why: "Complete protein with choline for brain health", whyNot: "" },
+                { name: "Rice", why: "Gluten-free grain with B vitamins", whyNot: "" },
+                { name: "Oats", why: "Soluble fiber for cholesterol management", whyNot: "" },
+                { name: "Millet", why: "Ancient grain with good nutrients", whyNot: "" },
+                { name: "Rye", why: "Whole grain with fiber and minerals", whyNot: "" },
+                { name: "Spelt", why: "Ancient grain easier to digest than wheat", whyNot: "" },
+                { name: "Broccoli", why: "Cruciferous vegetable with vitamins", whyNot: "" },
+                { name: "Cabbage", why: "Anti-inflammatory with beneficial compounds", whyNot: "" },
+                { name: "Kale", why: "Nutrient-dense with vitamins A, C, K", whyNot: "" },
+                { name: "Spinach", why: "High in iron and folate", whyNot: "" },
+                { name: "Carrots", why: "Rich in beta-carotene for eye health", whyNot: "" },
+                { name: "Beets", why: "Contain nitrates for blood pressure support", whyNot: "" },
+                { name: "Mushrooms", why: "Immune-boosting with beta-glucans", whyNot: "" },
+                { name: "Peppers", why: "High in vitamin C for immunity", whyNot: "" },
+                { name: "Olives", why: "Healthy monounsaturated fats", whyNot: "" },
+                { name: "Nuts", why: "Healthy fats and minerals", whyNot: "" },
+                { name: "Seeds", why: "Rich in omega-3s and fiber", whyNot: "" },
+                { name: "Oils", why: "Provides essential fatty acids", whyNot: "" },
+                { name: "Apples", why: "Fiber for digestion and heart health", whyNot: "" },
+                { name: "Berries", why: "Antioxidant-rich for immunity", whyNot: "" }
             ],
             avoid: [
-                "Chicken", "Pork", "Beef", "Corn", "Wheat", "Buckwheat", "Peanuts",
-                "Sesame seeds", "Sunflower seeds", "Lentils", "Beans", "Tomatoes",
-                "Avocados", "Coconut", "Corn oil", "Peanut oil", "Sesame oil",
-                "Buckwheat", "Rye", "Tapioca", "Pumpkin", "Artichoke", "Radishes"
+                { name: "Chicken", why: "", whyNot: "Lectins in chicken problematic for Type B" },
+                { name: "Corn", why: "", whyNot: "Lectins interfere with Type B metabolism" },
+                { name: "Wheat", why: "", whyNot: "Gluten causes inflammation in Type B" },
+                { name: "Buckwheat", why: "", whyNot: "Despite the name, contains problematic lectins" },
+                { name: "Peanuts", why: "", whyNot: "Lectins cause digestive problems" },
+                { name: "Sesame seeds", why: "", whyNot: "Can aggravate Type B conditions" },
+                { name: "Sunflower seeds", why: "", whyNot: "May cause inflammatory response" },
+                { name: "Lentils", why: "", whyNot: "High lectin content problematic for Type B" },
+                { name: "Beans", why: "", whyNot: "Lectins interfere with nutrient absorption" },
+                { name: "Tomatoes", why: "", whyNot: "Lectins and acidity trigger problems" },
+                { name: "Avocados", why: "", whyNot: "Can disrupt Type B metabolism" },
+                { name: "Coconut", why: "", whyNot: "Too high in saturated fat" },
+                { name: "Corn oil", why: "", whyNot: "Inflammatory omega-6 oil" },
+                { name: "Peanut oil", why: "", whyNot: "Contains problematic lectins" },
+                { name: "Sesame oil", why: "", whyNot: "May cause immune reaction" },
+                { name: "Tapioca", why: "", whyNot: "Refined starch without nutrition" },
+                { name: "Pumpkin", why: "", whyNot: "Can cause digestive upset" },
+                { name: "Artichoke", why: "", whyNot: "Lectins can be problematic" },
+                { name: "Radishes", why: "", whyNot: "May cause digestive issues" },
+                { name: "Rhubarb", why: "", whyNot: "Too acidic for Type B" }
             ],
             neutral: [
-                "Turkey", "Duck", "Tuna", "Sardines", "Shrimp", "Lobster", "Herring",
-                "Brown rice", "Pasta", "Bread", "Crackers", "Asparagus", "Celery",
-                "Cucumber", "Green beans", "Lettuce", "Honey", "Maple syrup",
-                "Bananas", "Cherries", "Grapes", "Lemons", "Pears", "Pineapple"
+                { name: "Turkey", why: "Good lean protein source", whyNot: "" },
+                { name: "Duck", why: "Contains quality protein and nutrients", whyNot: "" },
+                { name: "Tuna", why: "Lean fish protein", whyNot: "" },
+                { name: "Sardines", why: "Good omega-3 source", whyNot: "" },
+                { name: "Shrimp", why: "Low calorie protein option", whyNot: "" },
+                { name: "Lobster", why: "Quality shellfish protein", whyNot: "" },
+                { name: "Herring", why: "Good source of omega-3s", whyNot: "" },
+                { name: "Brown rice", why: "Whole grain with nutrients", whyNot: "" },
+                { name: "Pasta", why: "Can be eaten in moderation", whyNot: "" },
+                { name: "Bread", why: "Gluten-free options available", whyNot: "" },
+                { name: "Crackers", why: "Gluten-free varieties okay", whyNot: "" },
+                { name: "Asparagus", why: "Good vegetable option", whyNot: "" },
+                { name: "Celery", why: "Light vegetable with minerals", whyNot: "" },
+                { name: "Cucumber", why: "Hydrating and low-calorie", whyNot: "" },
+                { name: "Green beans", why: "Nutrient-rich vegetable", whyNot: "" },
+                { name: "Lettuce", why: "Light salad base", whyNot: "" },
+                { name: "Honey", why: "Natural sweetener option", whyNot: "" },
+                { name: "Maple syrup", why: "Contains minerals and antioxidants", whyNot: "" },
+                { name: "Banana", why: "Good source of potassium", whyNot: "" },
+                { name: "Cherry", why: "Antioxidant-rich fruit", whyNot: "" },
+                { name: "Grape", why: "Contains beneficial antioxidants", whyNot: "" }
             ]
         },
         AB: {
             beneficial: [
-                "Lamb", "Mutton", "Rabbit", "Salmon", "Mackerel", "Cod", "Tuna",
-                "Sardines", "Milk", "Yogurt", "Cheese", "Kefir", "Tofu", "Tempeh",
-                "Beans", "Lentils", "Peas", "Soy products", "Rice", "Oats", "Rye",
-                "Broccoli", "Cauliflower", "Kale", "Spinach", "Carrots", "Beets",
-                "Garlic", "Onions", "Mushrooms", "Olives", "Apples", "Berries"
+                { name: "Lamb", why: "Excellent protein source for Type AB", whyNot: "" },
+                { name: "Mutton", why: "Rich in iron and B vitamins", whyNot: "" },
+                { name: "Rabbit", why: "Light protein source", whyNot: "" },
+                { name: "Salmon", why: "Rich in omega-3s for heart health", whyNot: "" },
+                { name: "Mackerel", why: "Excellent omega-3 and vitamin D source", whyNot: "" },
+                { name: "Cod", why: "Lean fish with iodine", whyNot: "" },
+                { name: "Tuna", why: "Quality protein with minerals", whyNot: "" },
+                { name: "Sardines", why: "High in calcium and omega-3s", whyNot: "" },
+                { name: "Milk", why: "Calcium for bone health", whyNot: "" },
+                { name: "Yogurt", why: "Probiotics for digestion", whyNot: "" },
+                { name: "Cheese", why: "Protein and calcium source", whyNot: "" },
+                { name: "Kefir", why: "Fermented dairy with probiotics", whyNot: "" },
+                { name: "Tofu", why: "Complete plant-based protein", whyNot: "" },
+                { name: "Tempeh", why: "Fermented soy protein", whyNot: "" },
+                { name: "Beans", why: "Plant protein and fiber", whyNot: "" },
+                { name: "Lentils", why: "High in protein and nutrients", whyNot: "" },
+                { name: "Peas", why: "Protein and vitamin-rich", whyNot: "" },
+                { name: "Soy products", why: "Complete protein source", whyNot: "" },
+                { name: "Rice", why: "Gluten-free grain", whyNot: "" },
+                { name: "Oats", why: "Good fiber source", whyNot: "" },
+                { name: "Rye", why: "Whole grain with nutrients", whyNot: "" },
+                { name: "Broccoli", why: "Cruciferous vegetable with benefits", whyNot: "" },
+                { name: "Cauliflower", why: "Nutrient-dense cruciferous vegetable", whyNot: "" },
+                { name: "Kale", why: "Vitamins A, C, K rich", whyNot: "" },
+                { name: "Spinach", why: "Iron and folate source", whyNot: "" },
+                { name: "Carrots", why: "Beta-carotene for eye health", whyNot: "" },
+                { name: "Beets", why: "Contain beneficial nitrates", whyNot: "" },
+                { name: "Garlic", why: "Immune-boosting properties", whyNot: "" },
+                { name: "Onions", why: "Anti-inflammatory compounds", whyNot: "" },
+                { name: "Mushrooms", why: "Immune support benefits", whyNot: "" },
+                { name: "Olives", why: "Healthy monounsaturated fats", whyNot: "" },
+                { name: "Apples", why: "Fiber and antioxidants", whyNot: "" },
+                { name: "Berries", why: "Antioxidant-rich for immunity", whyNot: "" }
             ],
             avoid: [
-                "Beef", "Pork", "Venison", "Chicken", "Corn", "Buckwheat", "Peanuts",
-                "Sesame seeds", "Sunflower seeds", "Tomatoes", "Peppers", "Avocados",
-                "Corn oil", "Peanut oil", "Sesame oil", "Radishes", "Artichokes",
-                "Bananas", "Coconut", "Guava", "Mangoes", "Oranges", "Rhubarb"
+                { name: "Beef", why: "", whyNot: "Red meat too heavy for AB digestion" },
+                { name: "Pork", why: "", whyNot: "Lectins cause inflammation" },
+                { name: "Venison", why: "", whyNot: "Game meat problematic" },
+                { name: "Chicken", why: "", whyNot: "Lectins problematic for Type AB" },
+                { name: "Corn", why: "", whyNot: "Lectins interfere with AB metabolism" },
+                { name: "Buckwheat", why: "", whyNot: "Contains problematic lectins" },
+                { name: "Peanuts", why: "", whyNot: "High lectin content" },
+                { name: "Sesame seeds", why: "", whyNot: "May cause immune reaction" },
+                { name: "Sunflower seeds", why: "", whyNot: "Can aggravate AB conditions" },
+                { name: "Tomatoes", why: "", whyNot: "Lectins and acidity problematic" },
+                { name: "Peppers", why: "", whyNot: "May cause irritation" },
+                { name: "Avocados", why: "", whyNot: "Can disrupt AB metabolism" },
+                { name: "Coconut", why: "", whyNot: "Too high in saturated fat" },
+                { name: "Corn oil", why: "", whyNot: "Inflammatory omega-6" },
+                { name: "Peanut oil", why: "", whyNot: "Contains lectins" },
+                { name: "Sesame oil", why: "", whyNot: "May cause issues" },
+                { name: "Radishes", why: "", whyNot: "Can cause digestive upset" },
+                { name: "Artichokes", why: "", whyNot: "Lectins problematic" },
+                { name: "Bananas", why: "", whyNot: "Too mucus-producing" },
+                { name: "Oranges", why: "", whyNot: "Too acidic for AB" },
+                { name: "Guava", why: "", whyNot: "May cause issues" },
+                { name: "Mangoes", why: "", whyNot: "Too heavy" },
+                { name: "Rhubarb", why: "", whyNot: "Too acidic" }
             ],
             neutral: [
-                "Turkey", "Duck", "Tuna", "Halibut", "Trout", "Shrimp", "Lobster",
-                "Eggs", "Brown rice", "Bread", "Pasta", "Crackers", "Asparagus",
-                "Celery", "Cucumber", "Green beans", "Lettuce", "Honey", "Maple syrup",
-                "Cherries", "Grapes", "Lemons", "Limes", "Pears", "Pineapple"
+                { name: "Turkey", why: "Good lean protein", whyNot: "" },
+                { name: "Duck", why: "Quality protein source", whyNot: "" },
+                { name: "Halibut", why: "Lean fish protein", whyNot: "" },
+                { name: "Trout", why: "Contains omega-3s", whyNot: "" },
+                { name: "Shrimp", why: "Low calorie protein", whyNot: "" },
+                { name: "Lobster", why: "Quality shellfish", whyNot: "" },
+                { name: "Eggs", why: "Complete protein source", whyNot: "" },
+                { name: "Brown rice", why: "Whole grain option", whyNot: "" },
+                { name: "Bread", why: "Gluten-free options available", whyNot: "" },
+                { name: "Pasta", why: "Can be eaten moderately", whyNot: "" },
+                { name: "Crackers", why: "Gluten-free varieties okay", whyNot: "" },
+                { name: "Asparagus", why: "Good vegetable", whyNot: "" },
+                { name: "Celery", why: "Low-calorie vegetable", whyNot: "" },
+                { name: "Cucumber", why: "Hydrating option", whyNot: "" },
+                { name: "Green beans", why: "Nutrient-rich", whyNot: "" },
+                { name: "Lettuce", why: "Light vegetable base", whyNot: "" },
+                { name: "Honey", why: "Natural sweetener", whyNot: "" },
+                { name: "Maple syrup", why: "Contains antioxidants", whyNot: "" },
+                { name: "Cherry", why: "Antioxidant fruit", whyNot: "" },
+                { name: "Grape", why: "Contains resveratrol", whyNot: "" },
+                { name: "Lemon", why: "Aids digestion", whyNot: "" },
+                { name: "Lime", why: "Vitamin C source", whyNot: "" },
+                { name: "Pear", why: "Good fiber source", whyNot: "" },
+                { name: "Pineapple", why: "Contains bromelain", whyNot: "" }
             ]
         }
     };
@@ -402,9 +671,9 @@
         const avoid = foodDatabase[selectedBloodType].avoid;
         const neutral = foodDatabase[selectedBloodType].neutral;
 
-        let beneficialMatch = beneficial.find(f => f.toLowerCase().includes(searchTerm));
-        let avoidMatch = avoid.find(f => f.toLowerCase().includes(searchTerm));
-        let neutralMatch = neutral.find(f => f.toLowerCase().includes(searchTerm));
+        let beneficialMatch = beneficial.find(f => f.name.toLowerCase().includes(searchTerm));
+        let avoidMatch = avoid.find(f => f.name.toLowerCase().includes(searchTerm));
+        let neutralMatch = neutral.find(f => f.name.toLowerCase().includes(searchTerm));
 
         document.getElementById('emptyState').style.display = 'none';
         document.getElementById('foodListContainer').style.display = 'none';
@@ -412,15 +681,18 @@
         document.getElementById('resultsContainer').innerHTML = '';
 
         if (beneficialMatch) {
-            addResultCard('beneficial', beneficialMatch, 'Excellent Choice! ✅', 'This food is beneficial for your blood type and supports optimal health.');
+            addResultCard('beneficial', beneficialMatch.name, 'Excellent Choice! ✅', 
+                `<strong>Why eat it:</strong> ${beneficialMatch.why}`);
         }
 
         if (avoidMatch) {
-            addResultCard('avoid', avoidMatch, 'Avoid This! ❌', 'This food may cause digestive issues and inflammation for your blood type.');
+            addResultCard('avoid', avoidMatch.name, 'Avoid This! ❌', 
+                `<strong>Why avoid it:</strong> ${avoidMatch.whyNot}`);
         }
 
         if (neutralMatch) {
-            addResultCard('neutral', neutralMatch, 'Neutral - Okay ⚠️', 'This food is neutral for your blood type. It\'s safe to eat in moderation.');
+            addResultCard('neutral', neutralMatch.name, 'Neutral - Okay ⚠️', 
+                `This food is neutral for your blood type. It's safe to eat in moderation.`);
         }
 
         if (!beneficialMatch && !avoidMatch && !neutralMatch) {
